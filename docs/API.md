@@ -21,7 +21,8 @@ Place this attribute on the same element as `[leaflet]`.
 
 | Input | Type | Description |
 |-------|------|-------------|
-| `leafletGeomanOptions` | `any` (PM.ToolbarOptions) | Options passed to `map.pm.addControls()`. Controls which toolbar buttons are shown and their position. |
+| `leafletGeomanOptions` | `PM.ToolbarOptions` | Options passed to `map.pm.addControls()`. Controls which toolbar buttons are shown and their position. |
+| `leafletGeomanGlobalOptions` | `PM.GlobalOptions` | Options passed to `map.pm.setGlobalOptions()`. Configures global drawing and editing behaviour, including `markerStyle` for marker icon setup. |
 
 
 ### Outputs

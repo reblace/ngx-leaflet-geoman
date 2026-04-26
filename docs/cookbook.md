@@ -43,12 +43,70 @@ export class MapComponent {
 ```
 
 
+## Marker icon setup
+
+If you are using Angular CLI or Webpack, Leaflet's default marker icon URLs break at build time. The recommended fix is to pass an explicit icon via `leafletGeomanGlobalOptions`:
+
+```typescript
+import { icon } from 'leaflet';
+
+geomanGlobalOptions = {
+  markerStyle: {
+    icon: icon({
+      iconSize: [ 25, 41 ],
+      iconAnchor: [ 13, 41 ],
+      iconUrl: 'assets/leaflet/marker-icon.png',
+      iconRetinaUrl: 'assets/leaflet/marker-icon-2x.png',
+      shadowUrl: 'assets/leaflet/marker-shadow.png'
+    })
+  }
+};
+```
+
+```html
+<div leaflet
+     leafletGeoman
+     [leafletOptions]="mapOptions"
+     [leafletGeomanGlobalOptions]="geomanGlobalOptions">
+</div>
+```
+
+You will also need to copy the Leaflet marker images into your build output. In `angular.json`:
+
+```json
+"assets": [
+  {
+    "glob": "*.png",
+    "input": "node_modules/leaflet/dist/images/",
+    "output": "assets/leaflet/"
+  }
+]
+```
+
+Alternatively, you can set Leaflet's default icon globally using `Icon.Default.mergeOptions()`. This affects all Leaflet markers in the app, not just those created by geoman:
+
+```typescript
+import { Icon } from 'leaflet';
+
+delete (Icon.Default.prototype as any)._getIconUrl;
+Icon.Default.mergeOptions({
+  iconUrl: 'assets/leaflet/marker-icon.png',
+  iconRetinaUrl: 'assets/leaflet/marker-icon-2x.png',
+  shadowUrl: 'assets/leaflet/marker-shadow.png'
+});
+```
+
+For more background see the [Marker Setup](https://github.com/bluehalo/ngx-leaflet/blob/master/docs/cookbook.md#marker-setup) guide in the @bluehalo/ngx-leaflet cookbook.
+
+
 ## Accessing map.pm directly via the ready event
 
 ```typescript
-pm: any;
+import { PM } from 'leaflet';
 
-onGeomanReady(pm: any) {
+pm: PM.PMMap;
+
+onGeomanReady(pm: PM.PMMap) {
   this.pm = pm;
   // e.g. programmatically start drawing a polygon
   pm.enableDraw('Polygon');
