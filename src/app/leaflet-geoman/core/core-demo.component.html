@@ -1,0 +1,13 @@
+<div leaflet style="height: 100%; margin: 0; padding: 0;"
+     leafletGeoman
+     [leafletOptions]="options"
+     [leafletGeomanOptions]="geomanOptions"
+     (leafletGeomanCreate)="onGeomanCreate($event)"
+     (leafletGeomanRemove)="onGeomanRemove($event)"
+     (leafletGeomanEdit)="onGeomanEdit($event)"
+     (leafletGeomanDrawStart)="onGeomanDrawStart($event)">
+
+	<!-- Add drawn items feature group to the map -->
+	<div [leafletLayer]="drawnItems"></div>
+
+</div>
