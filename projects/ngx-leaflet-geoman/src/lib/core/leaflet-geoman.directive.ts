@@ -1,7 +1,7 @@
 import { Directive, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output } from '@angular/core';
 
 import '@geoman-io/leaflet-geoman-free';
-import { LeafletEvent, Map as LeafletMap } from 'leaflet';
+import { LeafletEvent, Map as LeafletMap, PM } from 'leaflet';
 
 import { LeafletDirective, LeafletDirectiveWrapper, LeafletUtil } from '@bluehalo/ngx-leaflet';
 
@@ -16,10 +16,11 @@ export class LeafletGeomanDirective
 	private map: LeafletMap;
 	private readonly eventHandlers: Array<{ event: string; handler: (e: any) => void }> = [];
 
-	@Input('leafletGeomanOptions') geomanOptions: any = null;
+	@Input('leafletGeomanOptions') geomanOptions: PM.ToolbarOptions = null;
+	@Input('leafletGeomanGlobalOptions') geomanGlobalOptions: PM.GlobalOptions = null;
 
 	// Ready event — emits the map.pm object when the plugin is initialized
-	@Output('leafletGeomanReady') geomanReady = new EventEmitter<any>();
+	@Output('leafletGeomanReady') geomanReady = new EventEmitter<PM.PMMap>();
 
 	// Draw lifecycle
 	@Output('leafletGeomanDrawStart') onDrawStart = new EventEmitter<LeafletEvent>();
@@ -74,8 +75,11 @@ export class LeafletGeomanDirective
 
 		this.map = this.leafletDirective.getMap();
 
-		const pm = (this.map as any).pm;
-		pm.addControls(this.geomanOptions ?? {});
+		if (null != this.geomanGlobalOptions) {
+			this.map.pm.setGlobalOptions(this.geomanGlobalOptions);
+		}
+
+		this.map.pm.addControls(this.geomanOptions ?? {});
 
 		// Draw lifecycle
 		this.addEventHandler('pm:drawstart', (e) => LeafletUtil.handleEvent(this.zone, this.onDrawStart, e));
@@ -121,13 +125,13 @@ export class LeafletGeomanDirective
 		this.addEventHandler('pm:globalcutmodetoggled', (e) => LeafletUtil.handleEvent(this.zone, this.onGlobalCutModeToggled, e));
 		this.addEventHandler('pm:globalrotatemodetoggled', (e) => LeafletUtil.handleEvent(this.zone, this.onGlobalRotateModeToggled, e));
 
-		this.geomanReady.emit(pm);
+		this.geomanReady.emit(this.map.pm);
 	}
 
 	ngOnDestroy() {
 		this.eventHandlers.forEach(({ event, handler }) => this.map.off(event, handler));
 		this.eventHandlers.length = 0;
-		(this.map as any).pm.removeControls();
+		this.map.pm.removeControls();
 	}
 
 	private addEventHandler(event: string, handler: (e: any) => void) {
@@ -135,8 +139,8 @@ export class LeafletGeomanDirective
 		this.eventHandlers.push({ event, handler });
 	}
 
-	public getGeomanControls() {
-		return (this.map as any).pm;
+	public getGeomanControls(): PM.PMMap {
+		return this.map.pm;
 	}
 
 }

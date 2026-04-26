@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { featureGroup, FeatureGroup, latLng, tileLayer } from 'leaflet';
+import { featureGroup, FeatureGroup, icon, latLng, tileLayer } from 'leaflet';
 
 @Component({
 	selector: 'leafletGeomanCoreDemo',
@@ -19,8 +19,8 @@ export class LeafletGeomanCoreDemoComponent {
 		center: latLng({ lat: 46.879966, lng: -121.726909 })
 	};
 
-	geomanOptions: any = {
-		position: 'topleft',
+	geomanOptions = {
+		position: 'topleft' as const,
 		drawMarker: true,
 		drawPolyline: true,
 		drawRectangle: true,
@@ -32,6 +32,18 @@ export class LeafletGeomanCoreDemoComponent {
 		cutPolygon: true,
 		removalMode: true,
 		rotateMode: true
+	};
+
+	geomanGlobalOptions = {
+		markerStyle: {
+			icon: icon({
+				iconSize: [ 25, 41 ] as [number, number],
+				iconAnchor: [ 13, 41 ] as [number, number],
+				iconUrl: 'assets/leaflet/marker-icon.png',
+				iconRetinaUrl: 'assets/leaflet/marker-icon-2x.png',
+				shadowUrl: 'assets/leaflet/marker-shadow.png'
+			})
+		}
 	};
 
 	public onGeomanCreate(e: any) {

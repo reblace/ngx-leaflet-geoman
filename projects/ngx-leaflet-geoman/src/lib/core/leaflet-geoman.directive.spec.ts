@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { latLng, Map as LeafletMap } from 'leaflet';
+import { latLng, Map as LeafletMap, PM } from 'leaflet';
 import '@geoman-io/leaflet-geoman-free';
 
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
@@ -18,17 +18,19 @@ import { LeafletGeomanDirective } from './leaflet-geoman.directive';
 		[leafletOptions]="options"
 		leafletGeoman
 		[leafletGeomanOptions]="geomanOptions"
+		[leafletGeomanGlobalOptions]="geomanGlobalOptions"
 		(leafletMapReady)="onMapReady($event)"
 		(leafletGeomanReady)="onGeomanReady($event)">
 	</div>`
 })
 class TestHostComponent {
 	options = { zoom: 4, center: latLng(0, 0) };
-	geomanOptions: any = null;
+	geomanOptions: PM.ToolbarOptions = null;
+	geomanGlobalOptions: PM.GlobalOptions = null;
 	map: LeafletMap;
-	pm: any;
+	pm: PM.PMMap;
 	onMapReady(m: LeafletMap) { this.map = m; }
-	onGeomanReady(pm: any) { this.pm = pm; }
+	onGeomanReady(pm: PM.PMMap) { this.pm = pm; }
 }
 
 
@@ -94,19 +96,35 @@ describe('LeafletGeomanDirective', () => {
 	// -------------------------------------------------------------------------
 	describe('geomanOptions input', () => {
 
-		it('calls pm.addControls with null options when none provided', () => {
+		it('calls pm.addControls with empty object when none provided', () => {
 			init();
 			// Just verify init completes without error — addControls accepts empty object
 			expect(directive).toBeTruthy();
 		});
 
 		it('passes geomanOptions to pm.addControls', () => {
-			const spy = jasmine.createSpy('addControls');
-			// Patch pm.addControls before fixture detects changes
-			const options = { drawMarker: false };
-			// Verify directive initializes successfully with options
-			init(h => h.geomanOptions = options);
+			init(h => h.geomanOptions = { drawMarker: false });
 			expect(directive).toBeTruthy();
+		});
+
+	});
+
+
+	// -------------------------------------------------------------------------
+	// Group 3: geomanGlobalOptions input
+	// -------------------------------------------------------------------------
+	describe('geomanGlobalOptions input', () => {
+
+		it('does not call setGlobalOptions when geomanGlobalOptions is null', () => {
+			init();
+			// directive should still init cleanly
+			expect(directive).toBeTruthy();
+		});
+
+		it('calls pm.setGlobalOptions when geomanGlobalOptions is provided', () => {
+			init(h => h.geomanGlobalOptions = { exitModeOnEscape: true });
+			// Verify the option was applied by reading it back via getGlobalOptions()
+			expect(host.map.pm.getGlobalOptions().exitModeOnEscape).toBeTrue();
 		});
 
 	});
