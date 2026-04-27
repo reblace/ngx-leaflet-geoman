@@ -140,9 +140,6 @@ startDrawing() {
 }
 ```
 
-> **Note:** `exportAs: 'leafletGeoman'` needs to be added to the directive decorator to use template references. See the directive source.
-
-
 ## Listening to mode toggle events
 
 ```html

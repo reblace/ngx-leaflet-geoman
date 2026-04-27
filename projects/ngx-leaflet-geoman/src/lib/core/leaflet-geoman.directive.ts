@@ -7,6 +7,7 @@ import { LeafletDirective, LeafletDirectiveWrapper, LeafletUtil } from '@bluehal
 
 @Directive({
 	selector: '[leafletGeoman]',
+	exportAs: 'leafletGeoman',
 })
 export class LeafletGeomanDirective
 	implements OnInit, OnDestroy {
