@@ -1,7 +1,7 @@
 import { Directive, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output } from '@angular/core';
 
 import '@geoman-io/leaflet-geoman-free';
-import { LeafletEvent, Map as LeafletMap, PM } from 'leaflet';
+import { Map as LeafletMap, PM } from 'leaflet';
 
 import { LeafletDirective, LeafletDirectiveWrapper, LeafletUtil } from '@bluehalo/ngx-leaflet';
 
@@ -23,48 +23,48 @@ export class LeafletGeomanDirective
 	@Output('leafletGeomanReady') geomanReady = new EventEmitter<PM.PMMap>();
 
 	// Draw lifecycle
-	@Output('leafletGeomanDrawStart') onDrawStart = new EventEmitter<LeafletEvent>();
-	@Output('leafletGeomanDrawEnd') onDrawEnd = new EventEmitter<LeafletEvent>();
+	@Output('leafletGeomanDrawStart') onDrawStart = new EventEmitter<Parameters<PM.DrawStartEventHandler>[0]>();
+	@Output('leafletGeomanDrawEnd') onDrawEnd = new EventEmitter<Parameters<PM.DrawEndEventHandler>[0]>();
 
 	// Layer CRUD
-	@Output('leafletGeomanCreate') onCreate = new EventEmitter<LeafletEvent>();
-	@Output('leafletGeomanRemove') onRemove = new EventEmitter<LeafletEvent>();
-	@Output('leafletGeomanEdit') onEdit = new EventEmitter<LeafletEvent>();
-	@Output('leafletGeomanUpdate') onUpdate = new EventEmitter<LeafletEvent>();
-	@Output('leafletGeomanChange') onChange = new EventEmitter<LeafletEvent>();
+	@Output('leafletGeomanCreate') onCreate = new EventEmitter<Parameters<PM.CreateEventHandler>[0]>();
+	@Output('leafletGeomanRemove') onRemove = new EventEmitter<Parameters<PM.RemoveEventHandler>[0]>();
+	@Output('leafletGeomanEdit') onEdit = new EventEmitter<Parameters<PM.EditEventHandler>[0]>();
+	@Output('leafletGeomanUpdate') onUpdate = new EventEmitter<Parameters<PM.UpdateEventHandler>[0]>();
+	@Output('leafletGeomanChange') onChange = new EventEmitter<Parameters<PM.ChangeEventHandler>[0]>();
 
 	// Vertex editing
-	@Output('leafletGeomanVertexAdded') onVertexAdded = new EventEmitter<LeafletEvent>();
-	@Output('leafletGeomanVertexRemoved') onVertexRemoved = new EventEmitter<LeafletEvent>();
-	@Output('leafletGeomanMarkerDragStart') onMarkerDragStart = new EventEmitter<LeafletEvent>();
-	@Output('leafletGeomanMarkerDrag') onMarkerDrag = new EventEmitter<LeafletEvent>();
-	@Output('leafletGeomanMarkerDragEnd') onMarkerDragEnd = new EventEmitter<LeafletEvent>();
+	@Output('leafletGeomanVertexAdded') onVertexAdded = new EventEmitter<Parameters<PM.VertexAddedEventHandler>[0]>();
+	@Output('leafletGeomanVertexRemoved') onVertexRemoved = new EventEmitter<Parameters<PM.VertexRemovedEventHandler>[0]>();
+	@Output('leafletGeomanMarkerDragStart') onMarkerDragStart = new EventEmitter<Parameters<PM.MarkerDragStartEventHandler>[0]>();
+	@Output('leafletGeomanMarkerDrag') onMarkerDrag = new EventEmitter<Parameters<PM.MarkerDragEventHandler>[0]>();
+	@Output('leafletGeomanMarkerDragEnd') onMarkerDragEnd = new EventEmitter<Parameters<PM.MarkerDragEndEventHandler>[0]>();
 
 	// Drag mode
-	@Output('leafletGeomanDragStart') onDragStart = new EventEmitter<LeafletEvent>();
-	@Output('leafletGeomanDragEnd') onDragEnd = new EventEmitter<LeafletEvent>();
+	@Output('leafletGeomanDragStart') onDragStart = new EventEmitter<Parameters<PM.DragStartEventHandler>[0]>();
+	@Output('leafletGeomanDragEnd') onDragEnd = new EventEmitter<Parameters<PM.DragEndEventHandler>[0]>();
 
 	// Rotate mode
-	@Output('leafletGeomanRotateEnable') onRotateEnable = new EventEmitter<LeafletEvent>();
-	@Output('leafletGeomanRotateDisable') onRotateDisable = new EventEmitter<LeafletEvent>();
-	@Output('leafletGeomanRotateStart') onRotateStart = new EventEmitter<LeafletEvent>();
-	@Output('leafletGeomanRotate') onRotate = new EventEmitter<LeafletEvent>();
-	@Output('leafletGeomanRotateEnd') onRotateEnd = new EventEmitter<LeafletEvent>();
+	@Output('leafletGeomanRotateEnable') onRotateEnable = new EventEmitter<Parameters<PM.RotateEnableEventHandler>[0]>();
+	@Output('leafletGeomanRotateDisable') onRotateDisable = new EventEmitter<Parameters<PM.RotateDisableEventHandler>[0]>();
+	@Output('leafletGeomanRotateStart') onRotateStart = new EventEmitter<Parameters<PM.RotateStartEventHandler>[0]>();
+	@Output('leafletGeomanRotate') onRotate = new EventEmitter<Parameters<PM.RotateEventHandler>[0]>();
+	@Output('leafletGeomanRotateEnd') onRotateEnd = new EventEmitter<Parameters<PM.RotateEndEventHandler>[0]>();
 
 	// Cut mode
-	@Output('leafletGeomanCut') onCut = new EventEmitter<LeafletEvent>();
+	@Output('leafletGeomanCut') onCut = new EventEmitter<Parameters<PM.CutEventHandler>[0]>();
 
 	// Snap
-	@Output('leafletGeomanSnap') onSnap = new EventEmitter<LeafletEvent>();
-	@Output('leafletGeomanUnsnap') onUnsnap = new EventEmitter<LeafletEvent>();
+	@Output('leafletGeomanSnap') onSnap = new EventEmitter<Parameters<PM.SnapEventHandler>[0]>();
+	@Output('leafletGeomanUnsnap') onUnsnap = new EventEmitter<Parameters<PM.SnapEventHandler>[0]>();
 
 	// Global mode toggles
-	@Output('leafletGeomanGlobalDrawModeToggled') onGlobalDrawModeToggled = new EventEmitter<LeafletEvent>();
-	@Output('leafletGeomanGlobalEditModeToggled') onGlobalEditModeToggled = new EventEmitter<LeafletEvent>();
-	@Output('leafletGeomanGlobalRemovalModeToggled') onGlobalRemovalModeToggled = new EventEmitter<LeafletEvent>();
-	@Output('leafletGeomanGlobalDragModeToggled') onGlobalDragModeToggled = new EventEmitter<LeafletEvent>();
-	@Output('leafletGeomanGlobalCutModeToggled') onGlobalCutModeToggled = new EventEmitter<LeafletEvent>();
-	@Output('leafletGeomanGlobalRotateModeToggled') onGlobalRotateModeToggled = new EventEmitter<LeafletEvent>();
+	@Output('leafletGeomanGlobalDrawModeToggled') onGlobalDrawModeToggled = new EventEmitter<Parameters<PM.GlobalDrawModeToggledEventHandler>[0]>();
+	@Output('leafletGeomanGlobalEditModeToggled') onGlobalEditModeToggled = new EventEmitter<Parameters<PM.GlobalEditModeToggledEventHandler>[0]>();
+	@Output('leafletGeomanGlobalRemovalModeToggled') onGlobalRemovalModeToggled = new EventEmitter<Parameters<PM.GlobalRemovalModeToggledEventHandler>[0]>();
+	@Output('leafletGeomanGlobalDragModeToggled') onGlobalDragModeToggled = new EventEmitter<Parameters<PM.GlobalDragModeToggledEventHandler>[0]>();
+	@Output('leafletGeomanGlobalCutModeToggled') onGlobalCutModeToggled = new EventEmitter<Parameters<PM.GlobalCutModeToggledEventHandler>[0]>();
+	@Output('leafletGeomanGlobalRotateModeToggled') onGlobalRotateModeToggled = new EventEmitter<Parameters<PM.GlobalRotateModeToggledEventHandler>[0]>();
 
 	constructor(leafletDirective: LeafletDirective, private zone: NgZone) {
 		this.leafletDirective = new LeafletDirectiveWrapper(leafletDirective);
